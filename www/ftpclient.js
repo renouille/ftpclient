@@ -3,12 +3,12 @@ var FtpClient =  {
         cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
-            'FtpClient', // mapped to our native Java class called "Calendar"
+            'FtpClient', // mapped to our native Java class 
             'put', // with this action name
             [file, url]
         );
     }
-}
+};
 module.exports = FtpClient;
 
 /*

@@ -15,7 +15,7 @@
     <license>MIT</license>
     
     <js-module src="www/ftpclient.js" name="FtpClient">
-        <clobbers target="window.ftpclient" />
+        <clobbers target="FtpClient" />
     </js-module>
     
     <platform name="android">
