@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="com.macdonst.ftpclient"
+    version="2.2.0">
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+
+    <name>FtpClient</name>
+    <description>Support FTP upload and download for android</description>
+    <author>Macdonst</author>
+    <keywords>ftp,client</keywords>
+    <license>MIT</license>
+    
+    <js-module src="www/ftpclient.js" name="FtpClient">
+        <clobbers target="window.ftpclient" />
+    </js-module>
+    
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="FtpClient" >
+                <param name="android-package" value="com.macdonst.ftpclient.FtpClient"/>
+            </feature>
+        </config-file>
+        
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+        <source-file src="src/FtpClient.java" target-dir="src/com/macdonst/ftpclient" />
+        <source-file src="src/commons-net-2.2.jar" target-dir="libs" />
+    </platform>
+    
+</plugin>
