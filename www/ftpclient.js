@@ -9,7 +9,7 @@ var ftpclient =  {
         );
     }
 }
-module.exports = ftpclient;
+module.exports = FtpClient;
 
 /*
 cordova.define("cordova/plugin/ftpclient",
