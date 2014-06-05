@@ -10,6 +10,7 @@ package com.macdonst.ftpclient;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
 
 import android.app.Activity;
 import android.content.Intent;
