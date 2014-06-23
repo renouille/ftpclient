@@ -48,38 +48,39 @@ public class FtpClient extends CordovaPlugin {
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
 
-        final Runnable r = new Runnable() {
-            public void run() {
+        PluginResult.Status status = PluginResult.Status.OK;
+        JSONArray result = new JSONArray();
 
-                PluginResult.Status status = PluginResult.Status.OK;
-                JSONArray result = new JSONArray();
+        try {
 
-                try {
-
-                    String filename = args.getString(0);
-                    URL url = new URL(args.getString(1));
-                    
-                    if (action.equals("get")) {
-                        get(filename, url);
+        	String filename = args.getString(0);
+        	URL url = new URL(args.getString(1));
+        	
+            if (action.equals("get")) {
+                Thread t = new Thread(new Runnable() {
+                    public void run() {
+            	       get(filename, url);
                     }
-                    else if (action.equals("put")) {
-                        put(filename, url);
-                    }
-                    callbackContext.sendPluginResult(new PluginResult(status, result));
-
-                } catch (JSONException e) {
-                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
-                } catch (MalformedURLException e) {
-                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.MALFORMED_URL_EXCEPTION));
-                } catch (IOException e) {
-                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
-                }
+                });
+                t.start();
             }
-        };
+            else if (action.equals("put")) {
+            	Thread t = new Thread(new Runnable() {
+                    public void run() {
+                       put(filename, url);
+                    }
+                });
+                t.start();
+            }
+            callbackContext.sendPluginResult(new PluginResult(status, result));
 
-        Thread t = new Thread(r);
-        t.start();
-
+        } catch (JSONException e) {
+                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
+        } catch (MalformedURLException e) {
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.MALFORMED_URL_EXCEPTION));
+        } catch (IOException e) {
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
+        }
         return true;
 	}
 
