@@ -78,10 +78,10 @@ public class FtpClient extends CordovaPlugin {
 	 * @throws IOException
 	 */
 	private void put(String filename, URL url) throws IOException {
-        Thread t = new Thread(new Runnable() {
+        Thread t = new Thread(new Runnable(url) {
 
             @Override
-            public void run() {
+            public void run(url) {
                 try {
                     FTPClient f = setup(url);
         
