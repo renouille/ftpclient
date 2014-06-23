@@ -95,7 +95,6 @@ public class FtpClient extends CordovaPlugin {
                     
                     teardown(f);
                 } catch (IOException e) {
-                    e.stacktrace();
                 }
             }
             
