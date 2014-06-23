@@ -23,7 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.StringT$okenizer;
+import java.util.StringTokenizer;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -86,12 +86,12 @@ public class FtpClient extends CordovaPlugin {
 	 */
 	private void put(String filename, URL url) throws IOException {
 
-                    BufferedInputStream buffIn = new BufferedInputStream(new FileInputStream(new File(filename)));
-                    FTPClient f = setup(url);
-                    f.storeFile(extractFileName(url), buffIn);
-                    buffIn.close();
-                    
-                    teardown(f);
+        BufferedInputStream buffIn = new BufferedInputStream(new FileInputStream(new File(filename)));
+        FTPClient f = setup(url);
+        f.storeFile(extractFileName(url), buffIn);
+        buffIn.close();
+        
+        teardown(f);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class FtpClient extends CordovaPlugin {
 	 * @param url the url of the server
 	 * @throws IOException
 	 */
-	private void get(final String filename, final URL url) throws IOException {
+	private void get(String filename, URL url) throws IOException {
 		FTPClient f = setup(url);
 		
 		BufferedOutputStream buffOut=null;
