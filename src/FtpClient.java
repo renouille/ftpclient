@@ -36,6 +36,8 @@ import android.util.Log;
 public class FtpClient extends CordovaPlugin {
 
     private static final String LOG_TAG = "FtpClient";
+    private URL url;
+    private String filename;
 
 	/**
      * Executes the request and returns PluginResult.
@@ -51,14 +53,14 @@ public class FtpClient extends CordovaPlugin {
         JSONArray result = new JSONArray();
 
         try {
-        	String filename = args.getString(0);
-        	URL url = new URL(args.getString(1));
+        	this.filename = args.getString(0);
+        	this.url = new URL(args.getString(1));
         	
             if (action.equals("get")) {
-            	get(filename, url);
+            	get(this.filename, this.url);
             }
             else if (action.equals("put")) {
-            	put(filename, url);
+            	put(this.filename, this.url);
             }
             callbackContext.sendPluginResult(new PluginResult(status, result));
         } catch (JSONException e) {
@@ -77,11 +79,11 @@ public class FtpClient extends CordovaPlugin {
 	 * @param url the url of the server
 	 * @throws IOException
 	 */
-	private void put(String filename, URL url) throws IOException {
-        Thread t = new Thread(new Runnable(url) {
+	private void put(final String filename, final URL url) throws IOException {
+        Thread t = new Thread(new Runnable() {
 
             @Override
-            public void run(url) {
+            public void run() {
                 try {
                     FTPClient f = setup(url);
         
