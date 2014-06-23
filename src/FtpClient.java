@@ -72,10 +72,10 @@ public class FtpClient extends CordovaPlugin {
                 } catch (IOException e) {
                     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
                 }
-                return true;
             }
         });
         t.start();
+        return true;
 	}
 
 	/**
