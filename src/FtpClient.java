@@ -84,18 +84,15 @@ public class FtpClient extends CordovaPlugin {
 
             @Override
             public void run() {
-                try {
-                    FTPClient f = setup(url);
-        
-                    BufferedInputStream buffIn=null;
-                    buffIn=new BufferedInputStream(new FileInputStream(new File(filename)));
-                    f.storeFile(extractFileName(url), buffIn);
-                    buffIn.close();
-                    
-                    teardown(f);
-                } catch (IOException e) {
-                    throw new IOException();
-                }
+                
+                FTPClient f = setup(url);
+    
+                BufferedInputStream buffIn=null;
+                buffIn=new BufferedInputStream(new FileInputStream(new File(filename)));
+                f.storeFile(extractFileName(url), buffIn);
+                buffIn.close();
+                
+                teardown(f);
             }
             
         });
