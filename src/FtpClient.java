@@ -47,27 +47,35 @@ public class FtpClient extends CordovaPlugin {
      */
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
-		PluginResult.Status status = PluginResult.Status.OK;
+
+        PluginResult.Status status = PluginResult.Status.OK;
         JSONArray result = new JSONArray();
 
         try {
-        	String filename = args.getString(0);
-        	URL url = new URL(args.getString(1));
-        	
-            if (action.equals("get")) {
-            	get(filename, url);
-            }
-            else if (action.equals("put")) {
-            	put(filename, url);
-            }
-            callbackContext.sendPluginResult(new PluginResult(status, result));
-        } catch (JSONException e) {
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
+            Thread t = new Thread(new Runnable() {
+                public void run() {
+
+                	String filename = args.getString(0);
+                	URL url = new URL(args.getString(1));
+                	
+                    if (action.equals("get")) {
+                    	get(filename, url);
+                    }
+                    else if (action.equals("put")) {
+                    	put(filename, url);
+                    }
+                    callbackContext.sendPluginResult(new PluginResult(status, result));
+                }
+            });
+            t.start();
+        }
+        catch (JSONException e) {
+                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
         } catch (MalformedURLException e) {
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.MALFORMED_URL_EXCEPTION));
-		} catch (IOException e) {
-		    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
-		}
+        } catch (IOException e) {
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
+        }
         return true;
 	}
 
@@ -78,19 +86,15 @@ public class FtpClient extends CordovaPlugin {
 	 * @throws IOException
 	 */
 	private void put(String filename, URL url) throws IOException {
-		Thread t = new Thread(new Runnable() {
-            public void run() {
-                FTPClient f = setup(url);
-    
-                BufferedInputStream buffIn=null;
-                buffIn = new BufferedInputStream(new FileInputStream(new File(filename)));
-                f.storeFile(extractFileName(url), buffIn);
-                buffIn.close();
-                
-                teardown(f);
-            }
-        });
-        t.start();
+		
+        FTPClient f = setup(url);
+
+        BufferedInputStream buffIn=null;
+        buffIn = new BufferedInputStream(new FileInputStream(new File(filename)));
+        f.storeFile(extractFileName(url), buffIn);
+        buffIn.close();
+        
+        teardown(f);
 	}
 
 	/**
@@ -101,20 +105,15 @@ public class FtpClient extends CordovaPlugin {
 	 */
 	private void get(String filename, URL url) throws IOException {
 
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-        		FTPClient f = setup(url);
-        		
-        		BufferedOutputStream buffOut=null;
-        		buffOut=new BufferedOutputStream(new FileOutputStream(filename));
-        		f.retrieveFile(extractFileName(url), buffOut);
-        		buffOut.flush();
-        		buffOut.close();
-        		
-        		teardown(f);
-            }
-        });
-        t.start();
+		FTPClient f = setup(url);
+		
+		BufferedOutputStream buffOut=null;
+		buffOut=new BufferedOutputStream(new FileOutputStream(filename));
+		f.retrieveFile(extractFileName(url), buffOut);
+		buffOut.flush();
+		buffOut.close();
+		
+		teardown(f);
 	}
 
 	/**
