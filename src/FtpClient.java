@@ -59,7 +59,11 @@ public class FtpClient extends CordovaPlugin {
             if (action.equals("get")) {
                 Thread t = new Thread(new Runnable() {
                     public void run() {
-            	       get(filename, url);
+                        try {
+                            get(filename, url);
+                        } catch (IOException e) {
+                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
+                        }
                     }
                 });
                 t.start();
@@ -67,19 +71,22 @@ public class FtpClient extends CordovaPlugin {
             else if (action.equals("put")) {
             	Thread t = new Thread(new Runnable() {
                     public void run() {
-                       put(filename, url);
+                        try {
+                            put(filename, url);
+                        } catch (IOException e) {
+                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
+                        }
                     }
                 });
                 t.start();
             }
             callbackContext.sendPluginResult(new PluginResult(status, result));
-
+        } catch (IOException e) {
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));    
         } catch (JSONException e) {
                     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
         } catch (MalformedURLException e) {
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.MALFORMED_URL_EXCEPTION));
-        } catch (IOException e) {
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
         }
         return true;
 	}
