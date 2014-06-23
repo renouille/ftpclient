@@ -75,7 +75,7 @@ public class FtpClient extends CordovaPlugin {
                     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
                 }
             }
-        }
+        };
 
         Thread t = new Thread(r);
         t.start();
