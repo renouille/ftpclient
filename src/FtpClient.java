@@ -53,7 +53,6 @@ public class FtpClient extends CordovaPlugin {
         	String filename = args.getString(0);
         	URL url = new URL(args.getString(1));
         	
-        	
             if (action.equals("get")) {
             	get(filename, url);
             }
@@ -78,14 +77,21 @@ public class FtpClient extends CordovaPlugin {
 	 * @throws IOException
 	 */
 	private void put(String filename, URL url) throws IOException {
-		FTPClient f = setup(url);
-		
-		BufferedInputStream buffIn=null;
-		buffIn=new BufferedInputStream(new FileInputStream(filename));
-		f.storeFile(extractFileName(url), buffIn);
-		buffIn.close();
-		
-		teardown(f);
+
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                FTPClient f = setup(url);
+    
+                BufferedInputStream buffIn=null;
+                buffIn=new BufferedInputStream(new FileInputStream(new File(filename)));
+                f.storeFile(extractFileName(url), buffIn);
+                buffIn.close();
+                
+                teardown(f);
+            }
+        });
+        t.start();
+
 	}
 
 	/**
