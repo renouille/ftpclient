@@ -48,7 +48,7 @@ public class FtpClient extends CordovaPlugin {
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
 
-        Thread t = new Thread(new Runnable() {
+        final Runnable r = new Runnable() {
             public void run() {
 
                 PluginResult.Status status = PluginResult.Status.OK;
@@ -56,14 +56,14 @@ public class FtpClient extends CordovaPlugin {
 
                 try {
 
-                	String filename = args.getString(0);
-                	URL url = new URL(args.getString(1));
-                	
+                    String filename = args.getString(0);
+                    URL url = new URL(args.getString(1));
+                    
                     if (action.equals("get")) {
-                    	get(filename, url);
+                        get(filename, url);
                     }
                     else if (action.equals("put")) {
-                    	put(filename, url);
+                        put(filename, url);
                     }
                     callbackContext.sendPluginResult(new PluginResult(status, result));
 
@@ -76,6 +76,8 @@ public class FtpClient extends CordovaPlugin {
                 }
             }
         });
+
+        Thread t = new Thread(r);
         t.start();
 
         return true;
