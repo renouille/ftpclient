@@ -80,15 +80,15 @@ public class FtpClient extends CordovaPlugin {
 	 * @throws IOException
 	 */
 	private void put(final String filename, final URL url) throws IOException {
+
+        final BufferedInputStream buffIn = new BufferedInputStream(new FileInputStream(new File(filename)));
+
         Thread t = new Thread(new Runnable() {
 
             @Override
-            public void run() {
+            public void run() throws IOException {
                 
                 FTPClient f = setup(url);
-    
-                BufferedInputStream buffIn=null;
-                buffIn=new BufferedInputStream(new FileInputStream(new File(filename)));
                 f.storeFile(extractFileName(url), buffIn);
                 buffIn.close();
                 
