@@ -93,8 +93,8 @@ public class FtpClient extends CordovaPlugin {
                     buffIn.close();
                     
                     teardown(f);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (IOException e) {
+                    throw new IOException();
                 }
             }
             
@@ -108,7 +108,7 @@ public class FtpClient extends CordovaPlugin {
 	 * @param url the url of the server
 	 * @throws IOException
 	 */
-	private void get(String filename, URL url) throws IOException {
+	private void get(final String filename, final URL url) throws IOException {
 		FTPClient f = setup(url);
 		
 		BufferedOutputStream buffOut=null;
