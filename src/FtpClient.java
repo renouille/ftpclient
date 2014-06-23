@@ -48,12 +48,13 @@ public class FtpClient extends CordovaPlugin {
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
 
-        PluginResult.Status status = PluginResult.Status.OK;
-        JSONArray result = new JSONArray();
+        Thread t = new Thread(new Runnable() {
+            public void run() {
 
-        try {
-            Thread t = new Thread(new Runnable() {
-                public void run() {
+                PluginResult.Status status = PluginResult.Status.OK;
+                JSONArray result = new JSONArray();
+
+                try {
 
                 	String filename = args.getString(0);
                 	URL url = new URL(args.getString(1));
@@ -65,17 +66,18 @@ public class FtpClient extends CordovaPlugin {
                     	put(filename, url);
                     }
                     callbackContext.sendPluginResult(new PluginResult(status, result));
+
+                } catch (JSONException e) {
+                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
+                } catch (MalformedURLException e) {
+                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.MALFORMED_URL_EXCEPTION));
+                } catch (IOException e) {
+                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
                 }
-            });
-            t.start();
-        }
-        catch (JSONException e) {
-                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
-        } catch (MalformedURLException e) {
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.MALFORMED_URL_EXCEPTION));
-        } catch (IOException e) {
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION));
-        }
+            }
+        });
+        t.start();
+
         return true;
 	}
 
